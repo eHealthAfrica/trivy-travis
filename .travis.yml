@@ -1,0 +1,21 @@
+language: generic
+
+services:
+  - docker
+
+before_script:
+  # Install Trivy
+  - wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.45.0_Linux-64bit.deb
+  - sudo dpkg -i trivy_0.45.0_Linux-64bit.deb
+
+script:
+  # Build Docker image
+  - docker build -t simple-node-app:latest .
+  # Scan Docker image with Trivy
+  - trivy image --exit-code 1 --severity HIGH,CRITICAL simple-node-app:latest
+
+
+#language: generic: Specifies a generic environment , for Docker
+#services: docker:  enables Docker within the Travis CI environment.
+#before_script: Installs Trivy on the Travis CI environment
+
