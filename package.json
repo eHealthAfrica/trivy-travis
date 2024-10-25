@@ -1,5 +1,5 @@
 {
-  "name": "simple-node-app",
+  "name": "trivy-travis",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
