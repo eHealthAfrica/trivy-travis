@@ -11,9 +11,23 @@ before_script:
 script:
   # Build Docker image
   - docker build -t trivy-travis:latest .
-  # Scan Docker image with Trivy
-  - trivy image --exit-code 1 --severity HIGH,CRITICAL trivy-travis:latest
+  # Scan Docker image with Trivy and save the report in txt format
+  - trivy image --exit-code 1 --severity HIGH,CRITICAL --format table -o trivy-report.txt trivy-travis:latest || true
 
+after_script:
+  # Configure git
+  - git config --global user.email "kumar.gj@axxonet.net"
+  - git config --global user.name "kumar-axxonet"
+
+  # Checkout the branch for reports, create if it doesn't exist
+  - git checkout -b trivy-travis-reports || git checkout trivy-travis-reports
+
+  # Add and commit the Trivy report
+  - git add trivy-report.txt
+  - git commit -m "Add Trivy scan report on $(date +'%Y-%m-%d')"
+  
+  # Push to the repository
+  - git push https://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@github.com/eHealthAfrica/trivy-travis.git trivy-travis-reports
 
 #language: generic: Specifies a generic environment , for Docker
 #services: docker:  enables Docker within the Travis CI environment.
