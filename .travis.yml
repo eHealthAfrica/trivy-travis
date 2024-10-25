@@ -10,7 +10,7 @@ before_script:
 
 script:
   # Build Docker image
-  - docker build -t simple-node-app:latest .
+  - docker build -t trivy-travis:latest .
   # Scan Docker image with Trivy
   - trivy image --exit-code 1 --severity HIGH,CRITICAL trivy-travis:latest
 
