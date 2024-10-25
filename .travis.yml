@@ -12,7 +12,7 @@ script:
   # Build Docker image
   - docker build -t simple-node-app:latest .
   # Scan Docker image with Trivy
-  - trivy image --exit-code 1 --severity HIGH,CRITICAL simple-node-app:latest
+  - trivy image --exit-code 1 --severity HIGH,CRITICAL trivy-travis:latest
 
 
 #language: generic: Specifies a generic environment , for Docker
