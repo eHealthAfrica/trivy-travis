@@ -26,8 +26,9 @@ after_script:
   - git add trivy-report.txt
   - git commit -m "Add Trivy scan report on $(date +'%Y-%m-%d')"
   
-  # Push to the repository
+  # Push to the repository using the GITHUB_TOKEN
   - git push https://$GITHUB_TOKEN@github.com/eHealthAfrica/trivy-travis.git trivy-travis-reports
+
   
 #language: generic: Specifies a generic environment , for Docker
 #services: docker:  enables Docker within the Travis CI environment.
