@@ -19,17 +19,14 @@ script:
 after_script:
   - echo "Uploading report to DefectDojo..."
   - |
-    curl -X POST "$DEFECTDOJO_URL/api/v2/import-scan/" \
-      -H "Authorization: Token $DEFECTDOJO_API_TOKEN" \
-      -F "file=@trivy-report.json" \
-      -F "scan_type=Trivy" \
-      -F "engagement=10" \
-      -F "product=33" \
-      -F "version=None" \
-      -F "notes=Trivy report uploaded from Travis CI"
-
-
-  
-#language: generic: Specifies a generic environment , for Docker
-#services: docker:  enables Docker within the Travis CI environment.
-#before_script: Installs Trivy on the Travis CI environment
+    curl -X POST \
+      'DEFECTDOJO_URL/api/v2/import-scan/' \
+      -H 'accept: application/json' \
+      -H 'Authorization: DEFECTDOJO_API_TOKEN' \
+      -H 'Content-Type: multipart/form-data' \
+      -F 'test=33' \
+      #-F 'file=@/path/to/trivy-report.json;type=application/json' \
+	    -F 'file=@$trivy-report.json;type=application/json' \
+      -F 'scan_type=Trivy Scan' \
+      -F 'tags=sample' \
+      --max-time 300
