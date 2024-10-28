@@ -5,6 +5,7 @@ services:
 
 before_script:
   # Install Trivy
+  - export TRIVY_CACHE_DIR=$(pwd)/.trivycache
   - wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.56.2_Linux-64bit.deb
   - sudo dpkg -i trivy_0.56.2_Linux-64bit.deb
 
@@ -12,7 +13,7 @@ script:
   # Build Docker image
   - docker build -t trivy-travis:latest .
   # Scan Docker image with Trivy and save the report in JSON format
-  - trivy image --exit-code 1 --severity HIGH,CRITICAL --format json -o trivy-travis-report.json trivy-travis:latest || true
+  - trivy image --exit-code 1 --severity HIGH,CRITICAL --format json -o trivy-travis-report.json trivy-travis:latest
 
 after_script:
   # Check if the report file exists, then upload to DefectDojo
