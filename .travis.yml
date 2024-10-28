@@ -21,12 +21,12 @@ after_script:
   - echo "Uploading report to DefectDojo..."
   - |
     curl -X POST \
-      '${DEFECTDOJO_URL}/api/v2/import-scan/' \
+      "${DEFECTDOJO_URL}/api/v2/import-scan/" \
       -H 'accept: application/json' \
-      -H 'Authorization: DEFECTDOJO_API_TOKEN' \
+      -H "Authorization: Token $DEFECTDOJO_API_TOKEN" \
       -H 'Content-Type: multipart/form-data' \
       -F 'test=33' \
-      -F 'file=@$trivy-report.json;type=application/json' \
+      -F 'file=@trivy-report.json;type=application/json' \
       -F 'scan_type=Trivy Scan' \
       -F 'tags=sample' \
       --max-time 300
