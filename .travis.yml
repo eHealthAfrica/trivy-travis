@@ -1,10 +1,11 @@
-
 language: generic
 
 services:
   - docker
 
 before_script:
+  # Set up Trivy cache directory to avoid rate limiting
+  - export TRIVY_CACHE_DIR=$(pwd)/.trivycache
   # Install Trivy
   - wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.56.2_Linux-64bit.deb
   - sudo dpkg -i trivy_0.56.2_Linux-64bit.deb
@@ -12,11 +13,9 @@ before_script:
 script:
   # Build Docker image
   - docker build -t trivy-travis:latest .
-  # Scan Docker image with Trivy and save the report in json format
+  # Scan Docker image with Trivy and save the report in JSON format
   - trivy image --exit-code 1 --severity HIGH,CRITICAL --format json -o trivy-report.json trivy-travis:latest || true
 
-
-  
 after_script:
   - echo "Uploading report to DefectDojo..."
   - |
@@ -29,4 +28,4 @@ after_script:
       -F 'file=@trivy-report.json;type=application/json' \
       -F 'scan_type=Trivy Scan' \
       -F 'tags=sample' \
-      --max-time 300
+      --max-time 300 || echo "Failed to upload the report."
