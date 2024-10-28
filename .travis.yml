@@ -1,3 +1,4 @@
+
 language: generic
 
 services:
@@ -25,8 +26,7 @@ after_script:
       -H 'Authorization: DEFECTDOJO_API_TOKEN' \
       -H 'Content-Type: multipart/form-data' \
       -F 'test=33' \
-      #-F 'file=@/path/to/trivy-report.json;type=application/json' \
-	    -F 'file=@$trivy-report.json;type=application/json' \
+      -F 'file=@$trivy-report.json;type=application/json' \
       -F 'scan_type=Trivy Scan' \
       -F 'tags=sample' \
       --max-time 300
