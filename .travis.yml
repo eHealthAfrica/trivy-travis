@@ -21,7 +21,7 @@ after_script:
   - echo "Uploading report to DefectDojo..."
   - |
     curl -X POST \
-      'DEFECTDOJO_URL/api/v2/import-scan/' \
+      '${DEFECTDOJO_URL}/api/v2/import-scan/' \
       -H 'accept: application/json' \
       -H 'Authorization: DEFECTDOJO_API_TOKEN' \
       -H 'Content-Type: multipart/form-data' \
