@@ -13,6 +13,7 @@ script:
   - docker build -t trivy-travis:latest .
   # Scan Docker image with Trivy and save the report in json format
   - trivy image --exit-code 1 --severity HIGH,CRITICAL --format json -o trivy1-report.json trivy-travis:latest || true
+  - chmod 644 trivy-report.json || echo "Report file missing, skipping chmod."
 
 
   
