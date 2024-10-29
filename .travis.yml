@@ -7,6 +7,9 @@ before_script:
   # Install Trivy
   - wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.56.2_Linux-64bit.deb
   - sudo dpkg -i trivy_0.56.2_Linux-64bit.deb
+  # Authenticate with GitHub to avoid rate limiting
+  - echo "${GITHUB_TOKEN}" | docker login ghcr.io -u kumar-axxonet --password-stdin
+
 
 script:
   # Build Docker image
