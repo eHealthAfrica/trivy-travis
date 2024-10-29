@@ -7,7 +7,7 @@ before_script:
   # Install Trivy
   - wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.56.2_Linux-64bit.deb
   - sudo dpkg -i trivy_0.56.2_Linux-64bit.deb
-  - echo "DefectDojo URL: ${DEFECTDOJO_URL}"
+  
 
 script:
   # Build Docker image
@@ -17,7 +17,6 @@ script:
 
 after_script:
   - echo "Uploading report to DefectDojo..."
-  - echo "DefectDojo URL: ${DEFECTDOJO_URL}"
   - |
     curl -X POST \
       "${DEFECTDOJO_URL}" \
