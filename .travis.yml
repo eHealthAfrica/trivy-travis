@@ -11,8 +11,13 @@ before_script:
 script:
   # Build Docker image
   - docker build -t trivy-travis:latest .
+  # Update Trivy database
+  - trivy db update
   # Scan Docker image with Trivy and save the report in json format
   - trivy image --exit-code 1 --severity HIGH,CRITICAL --format json -o trivy1-report.json trivy-travis:latest || true
+  # Check if the report file was created
+  - if [ -f trivy1-report.json ]; then echo "Report generated successfully."; else echo "Report not generated."; fi
+  # Ensure proper permissions for the report file
   - chmod 644 trivy-report.json || echo "Report file missing, skipping chmod."
 
 
@@ -27,4 +32,7 @@ after_script:
       -F "engagement=10" \
       -F "product=33" \
       -F "version=None" \
-      -F "notes=Trivy report uploaded from Travis CI"
+      -F "notes=Trivy report uploaded from Travis CI";
+  else
+    echo "Report not found, skipping upload.";
+  fi
