@@ -31,7 +31,7 @@ after_script:
       curl -X POST "$DEFECTDOJO_URL/api/v2/import-scan/" \
         -H "Authorization: Token $DEFECTDOJO_API_TOKEN" \
         -F "file=@trivy1-report.json" \
-        -F "scan_type=Trivy Scan" \
+        -F "scan_type=Trivy" \
         -F "engagement=10" \
         -F "product=33" \
         -F "version=None" \
