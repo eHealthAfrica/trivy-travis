@@ -3,63 +3,27 @@ language: generic
 services:
   - docker
 
-cache:
-  directories:
-    - $HOME/.cache/trivy  # Cache Trivy's database to avoid repeated downloads
-
-before_install:
+before_script:
   # Install Trivy
   - wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.56.2_Linux-64bit.deb
   - sudo dpkg -i trivy_0.56.2_Linux-64bit.deb
 
-before_script:
-  # Authenticate with GitHub to avoid rate limiting
-  - echo "${GHCR_PAT}" | docker login ghcr.io -u ${GITHUB_USERNAME} --password-stdin
-  # Download the vulnerability database only
-  - trivy --download-db-only
-
 script:
   # Build Docker image
   - docker build -t trivy-travis:latest .
-  # Scan Docker image with Trivy and save the report in JSON format
-  - |
-    if ! trivy --debug image --exit-code 1 --severity HIGH,CRITICAL --format json -o trivy-report.json trivy-travis:latest; then
-      echo "Trivy scan failed, but continuing..."
-    fi
-  # Correct Permissions for the report file
-  - chmod 644 trivy-report.json || echo "Report file missing, skipping chmod."
+  # Scan Docker image with Trivy and save the report in json format
+  - trivy image --exit-code 1 --severity HIGH,CRITICAL --format json -o trivy1-report.json trivy-travis:latest || true
 
+
+  
 after_script:
-  # Check if the report file exists, then upload to DefectDojo with retry mechanism
+  - echo "Uploading report to DefectDojo..."
   - |
-    if [ -f trivy-report.json ]; then
-      echo "Report file found, attempting upload to DefectDojo..."
-      attempts=3  # Number of retries
-      success=false
-      for attempt in $(seq 1 $attempts); do
-        echo "Upload attempt #$attempt..."
-        if curl -X POST \
-          "${DEFECTDOJO_URL}/api/v2/reimport-scan/" \
-          -H 'accept: application/json' \
-          -H "Authorization: Token $DEFECTDOJO_API_TOKEN" \
-          -H 'Content-Type: multipart/form-data' \
-          -F "test=33" \
-          -F "file=@trivy-report.json;type=application/json" \
-          -F "scan_type=Trivy Scan" \
-          -F "tags=sample" \
-          --max-time 300; then
-          echo "Report successfully uploaded to DefectDojo."
-          success=true
-          break
-        else
-          echo "Upload failed on attempt #$attempt. Retrying in 10 seconds..."
-          sleep 10
-        fi
-      done
-
-      if [ "$success" != "true" ]; then
-        echo "Failed to upload the report after $attempts attempts."
-      fi
-    else
-      echo "Report file missing, skipping upload."
-    fi
+    curl -X POST "$DEFECTDOJO_URL/api/v2/import-scan/" \
+      -H "Authorization: Token $DEFECTDOJO_API_TOKEN" \
+      -F "file=@trivy1-report.json" \
+      -F "scan_type=Trivy" \
+      -F "engagement=10" \
+      -F "product=33" \
+      -F "version=None" \
+      -F "notes=Trivy report uploaded from Travis CI"
