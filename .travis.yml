@@ -3,21 +3,31 @@ language: generic
 services:
   - docker
 
-before_script:
+cache:
+  directories:
+    - $HOME/.cache/trivy  # Cache Trivy's database to avoid repeated downloads
+
+before_install:
   # Install Trivy
   - wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.56.2_Linux-64bit.deb
   - sudo dpkg -i trivy_0.56.2_Linux-64bit.deb
-  # Authenticate with GitHub to avoid rate limiting
-  - echo "${GITHUB_TOKEN}" | docker login ghcr.io -u kumar-axxonet --password-stdin
 
+before_script:
+  # Authenticate with GitHub to avoid rate limiting
+  - echo "${GHCR_PAT}" | docker login ghcr.io -u ${GITHUB_USERNAME} --password-stdin
+  # Download the vulnerability database only
+  - trivy --download-db-only
 
 script:
   # Build Docker image
   - docker build -t trivy-travis:latest .
   # Scan Docker image with Trivy and save the report in JSON format
-  - trivy --debug image --exit-code 1 --severity HIGH,CRITICAL --format json -o trivy-report.json trivy-travis:latest || true
+  - |
+    if ! trivy --debug image --exit-code 1 --severity HIGH,CRITICAL --format json -o trivy-report.json trivy-travis:latest; then
+      echo "Trivy scan failed, but continuing..."
+    fi
   # Correct Permissions for the report file
-  - chmod 644 trivy-report.json
+  - chmod 644 trivy-report.json || echo "Report file missing, skipping chmod."
 
 after_script:
   # Check if the report file exists, then upload to DefectDojo with retry mechanism
