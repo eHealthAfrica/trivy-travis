@@ -18,7 +18,7 @@ script:
   # Check if the report file was created
   - if [ -f trivy1-report.json ]; then echo "Report generated successfully."; else echo "Report not generated."; fi
   # Ensure proper permissions for the report file
-  - chmod 644 trivy-report.json || echo "Report file missing, skipping chmod."
+  - chmod 644 trivy1-report.json || echo "Report file missing, skipping chmod."
 
 
   
