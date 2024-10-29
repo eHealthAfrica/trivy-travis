@@ -26,7 +26,7 @@ after_script:
       -F 'file=@$trivy-report.json;type=application/json' \
       -F 'scan_type=Trivy Scan' \
       -F 'tags=sample' \
-      --max-time 300s
+      --max-time 300
 
 
   
