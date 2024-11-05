@@ -5,17 +5,6 @@ services:
 
 before_script:
   # Install Trivy
-  - wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.56.2_Linux-64bit.deb
-  - sudo dpkg -i trivy_0.56.2_Linux-64bit.deb
-
-script:
-  # Build Docker imagelanguage: generic
-
-services:
-  - docker
-
-before_script:
-  # Install Trivy
   - echo "Downloading Trivy..."
   - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
 
