@@ -32,27 +32,6 @@ script:
   - if [ ! -f trivy-report.json ]; then echo "Trivy report not found!"; exit 1; fi
 
 after_script:
-  # Upload Trivy report to DefectDojo
-  - echo "Uploading Trivy report to DefectDojo..."
-  - |
-    curl -X POST "$DEFECTDOJO_URL" \
-      -H "Authorization: Token $DEFECTDOJO_API_TOKEN" \
-      -H 'accept: application/json' \
-      -H 'Content-Type: multipart/form-data' \
-      -F "scan_type=Trivy Scan" \
-      -F "file=@trivy-report.json;type=application/json" \
-      --max-time 300
-  - if [ $? -ne 0 ]; then echo "Failed to upload Trivy report to DefectDojo!"; exit 1; fi
-
-  - echo "Trivy report uploaded successfully to DefectDojo."
-
-  - docker build -t trivy-travis:latest .
-  # Scan Docker image with Trivy and save the report in JSON format
-  - trivy image --exit-code 1 --severity HIGH,CRITICAL --format json -o $(pwd)/trivy-report.json trivy-travis:latest || true
-  # Confirm if trivy-report.json was generated
-  - ls -la $(pwd)/trivy-report.json  # Check if trivy-report.json exists and display its details
-
-after_script:
   - echo "Uploading report to DefectDojo..."
   - |
     curl -X POST "${DEFECTDOJO_URL}" \
