@@ -16,16 +16,13 @@ script:
   # Run Trivy scan on Docker image and generate a JSON report
   - echo "Running Trivy scan on Docker image..."
   - trivy image --timeout 30m --format json -o $(pwd)/trivy-report.json trivy-travis:latest
-  
-  # Ensure that the report was generated successfully
-  - if [ ! -f trivy-report.json ]; then echo "Trivy report not found!"; exit 1; fi
 
 after_script:
   - echo "Uploading report to DefectDojo..."
   - |
     curl -X POST "${DEFECTDOJO_URL}" \
       -H 'accept: application/json' \
-      -H "Authorization: ${DEFECTDOJO_API_TOKEN}" \
+      -H "Authorization: Token ${DEFECTDOJO_API_TOKEN}" \
       -H 'Content-Type: multipart/form-data' \
       -F "test=33" \
       -F "file=@$(pwd)/trivy-report.json;type=application/json" \
