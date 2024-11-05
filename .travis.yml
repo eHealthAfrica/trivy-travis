@@ -22,7 +22,7 @@ after_script:
   - |
     curl -X POST "${DEFECTDOJO_URL}" \
       -H 'accept: application/json' \
-      -H "Authorization: Token ${DEFECTDOJO_API_TOKEN}" \
+      -H "Authorization: ${DEFECTDOJO_API_TOKEN}" \
       -H 'Content-Type: multipart/form-data' \
       -F "test=33" \
       -F "file=@$(pwd)/trivy-report.json;type=application/json" \
