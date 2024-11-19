@@ -1,1 +1,1 @@
-console.log("Hello, Bikey Trivy with Travis CI"); 
+console.log("Hello, Bikey sonarqube with Travis CI"); 
