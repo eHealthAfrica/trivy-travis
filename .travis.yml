@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - "14"
+
+install:
+  - npm install
+
+
+before_install:
+  - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
+  - unzip sonar-scanner.zip
+  - export PATH=$PATH:$PWD/sonar-scanner-4.7.0.2747-linux/bin
+
+script:
+  - npm test 
+  
+
+after_success:
+  - sonar-scanner \
+      -Dsonar.projectKey=travis-sonarqube \
+      -Dsonar.sources=. \
+      -Dsonar.host.url=https://sonar.eha.ng/ \
+      -Dsonar.login=squ_580f85e96694b7ad343fe9640dd7ddd906097207
+
+
+
