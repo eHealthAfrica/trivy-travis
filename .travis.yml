@@ -20,7 +20,7 @@ after_success:
       -Dsonar.projectKey=travis-sonarqube \
       -Dsonar.sources=. \
       -Dsonar.host.url=https://sonar.eha.ng/ \
-      -Dsonar.login=squ_580f85e96694b7ad343fe9640dd7ddd906097207
+      -Dsonar.login=$TRAVIS_SONARQUBE
 
 
 
