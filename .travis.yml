@@ -6,6 +6,12 @@ install:
   - npm install
 
 before_install:
+  # Update Java to version 17
+  - sudo apt-get update
+  - sudo apt-get install -y openjdk-17-jdk
+  - java -version  # Verify the installed Java version
+
+  # Install Sonar Scanner
   - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
   - unzip sonar-scanner.zip
   - export PATH=$PATH:$PWD/sonar-scanner-4.7.0.2747-linux/bin
@@ -20,3 +26,4 @@ after_success:
       -Dsonar.sources=. \
       -Dsonar.host.url=https://sonar.eha.ng/ \
       -Dsonar.login=$TRAVIS_SONARQUBE
+      -X
