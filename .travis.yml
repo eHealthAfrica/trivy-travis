@@ -9,16 +9,21 @@ before_install:
   - docker pull node:16
   - docker pull openjdk:17
 
-  # Install SonarScanner manually in the Docker container
-  - docker run --rm -v $PWD:/workspace -w /workspace node:16 bash -c "curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip && unzip sonar-scanner-cli.zip"
-  - docker run --rm -v $PWD:/workspace -w /workspace node:16 bash -c "export PATH=$PATH:$PWD/sonar-scanner-4.7.0.2747-linux/bin"
+  # Install SonarScanner inside the node:16 container
+  - docker run --rm -v $PWD:/workspace -w /workspace node:16 bash -c "
+      curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip && \
+      unzip sonar-scanner-cli.zip && \
+      export PATH=\$PATH:\$PWD/sonar-scanner-4.7.0.2747-linux/bin && \
+      echo \"SonarScanner installed\""
 
 script:
   # Run your build commands inside the Node.js Docker container
   - docker run --rm -v $PWD:/workspace -w /workspace node:16 bash -c "npm install && npm test"
   
   # Run the SonarScanner inside the container with full debug (-X)
-  - docker run --rm -v $PWD:/workspace -w /workspace node:16 bash -c "sonar-scanner -Dsonar.projectKey=travis-sonarqube \
+  - docker run --rm -v $PWD:/workspace -w /workspace node:16 bash -c "
+      export PATH=\$PATH:/workspace/sonar-scanner-4.7.0.2747-linux/bin && \
+      sonar-scanner -Dsonar.projectKey=travis-sonarqube \
       -Dsonar.sources=. \
       -Dsonar.host.url=https://sonar.eha.ng/ \
       -Dsonar.login=$TRAVIS_SONARQUBE \
