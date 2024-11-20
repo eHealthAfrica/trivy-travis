@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "16"
+  - 22
   
 language: java
 
@@ -12,9 +12,9 @@ before_install:
  
 
   # Install Sonar Scanner
-  - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
+  - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.2.1-linux.zip
   - unzip sonar-scanner.zip
-  - export PATH=$PATH:$PWD/sonar-scanner-4.7.0.2747-linux/bin
+  - export PATH=$PATH:$PWD/sonar-scanner-6.2.1-linux/bin
 
 install:
   - npm install
