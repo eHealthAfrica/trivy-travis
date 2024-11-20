@@ -1,23 +1,23 @@
 language: java
 
 jdk:
-  - semeru17
+  - semeru17  # Use JDK 17 (Semeru version)
 
 node_js:
-  - 22
+  - "22"  # Ensure Node.js version 22 is installed
 
 before_install:
- 
-  # Install Sonar Scanner
-  - curl -L -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.2.0.4584-linux-x64.zip
-  - unzip sonar-scanner.zip
-  - export PATH=$PATH:$PWD/sonar-scanner-6.2.0.4584-linux-x64/bin
+  - node -v  # Verify Node.js version
+  - echo "Node.js version is: $(node -v)"  # Print Node.js version to the log for verification
+
+env:
+  - SONAR_NODEJS_EXECUTABLE=$(which node)  # Set the Node.js executable path for SonarQube
 
 install:
-  - npm install
+  - npm install  # Install dependencies
 
 script:
-  - npm test
+  - npm test  # Run your tests
 
 after_success:
   - |
@@ -26,4 +26,5 @@ after_success:
       -Dsonar.sources=. \
       -Dsonar.host.url=https://sonar.eha.ng/ \
       -Dsonar.login=$TRAVIS_SONARQUBE \
-      -X
+      -Dsonar.nodejs.executable=$SONAR_NODEJS_EXECUTABLE  # Use the SONAR_NODEJS_EXECUTABLE environment variable
+      -X  # Run with debug output
