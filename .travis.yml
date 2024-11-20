@@ -1,9 +1,9 @@
 language: node_js
 node_js:
-  - "22"  # Use Node.js v22.x
+  - "22"  
 
 jdk:
-  - openjdk17  # Use OpenJDK 17
+  - openjdk17 
 
 install:
   - npm install
@@ -24,4 +24,4 @@ after_success:
       -Dsonar.sources=. \
       -Dsonar.host.url=https://sonar.eha.ng/ \
       -Dsonar.login=$TRAVIS_SONARQUBE \
-      -X  # Enable full debug logging
+      -X 
