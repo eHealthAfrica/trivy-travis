@@ -10,7 +10,7 @@ before_install:
   - docker pull openjdk:17
 
   # Install unzip and then install SonarScanner in the debian-based container
-  - docker run --rm -v $PWD:/workspace -w /workspace debian:bullseye-slim sh -c "
+  - docker run --rm -v $PWD:/workspace -w /workspace debian:bullseye-slim bash -c "
       apt-get update && \
       apt-get install -y bash curl unzip && \
       curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip && \
