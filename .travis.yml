@@ -4,11 +4,20 @@ node_js:
   - "16"
 
 jdk:
-  - openjdk11
+  - openjdk17
 
+env:
+  global:
+    - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 
+addons:
+  apt:
+    packages:
+      - openjdk-17-jdk
 
 before_install:
+  - echo "Using JAVA_HOME: $JAVA_HOME"
+  - java -version
   - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
   - unzip sonar-scanner.zip
   - export PATH=$PATH:$PWD/sonar-scanner-4.7.0.2747-linux/bin
