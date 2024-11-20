@@ -8,7 +8,7 @@ node_js:
 
 before_install:
   - node -v  # Verify Node.js version
-  - echo "Node.js version is: $(node -v)"  # Print Node.js version to the log for verification
+  - echo "Node.js version is $(node -v)"   # Print Node.js version to the log for verification
 
 env:
   - SONAR_NODEJS_EXECUTABLE=$(which node)  # Set the Node.js executable path for SonarQube
