@@ -1,20 +1,17 @@
-language: node_js
-node_js:
-  - 22
-  
 language: java
 
 jdk:
   - semeru17
 
+node_js:
+  - 22
 
 before_install:
  
-
   # Install Sonar Scanner
-  - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.2.1.4610-linux.zip
+  - curl -L -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-latest-linux.zip
   - unzip sonar-scanner.zip
-  - export PATH=$PATH:$PWD/sonar-scanner-6.2.1.4610-linux/bin
+  - export PATH=$PATH:$PWD/sonar-scanner-latest-linux/bin
 
 install:
   - npm install
