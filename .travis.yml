@@ -1,26 +1,14 @@
+dist: focal
 language: node_js
 node_js:
   - "16"
 
 jdk:
-  - openjdk17
+  - openjdk11
 
-env:
-  global:
-    - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 # Path to OpenJDK 17
 
-addons:
-  apt:
-    packages:
-      - openjdk-17-jdk # Explicitly install Java 17
 
 before_install:
-  # Verify Java version and permissions
-  - echo "Using JAVA_HOME: $JAVA_HOME"
-  - ls -ld $JAVA_HOME
-  - java -version
-
-  # Install Sonar Scanner
   - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
   - unzip sonar-scanner.zip
   - export PATH=$PATH:$PWD/sonar-scanner-4.7.0.2747-linux/bin
