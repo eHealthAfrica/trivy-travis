@@ -12,7 +12,7 @@ before_install:
   # Install unzip and then install SonarScanner in the node:16 container
   - docker run --rm -v $PWD:/workspace -w /workspace alpine:3.18 sh -c "
       apk update && \
-      apk add --no-cache unzip curl && \
+      apk add --no-cache bash unzip curl && \
       curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip && \
       unzip sonar-scanner-cli.zip && \
       export PATH=\$PATH:\$PWD/sonar-scanner-4.7.0.2747-linux/bin && \
