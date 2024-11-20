@@ -9,9 +9,15 @@ env:
   global:
     - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 # Path to OpenJDK 17
 
+addons:
+  apt:
+    packages:
+      - openjdk-17-jdk # Explicitly install Java 17
+
 before_install:
-  # Verify Java version and path
+  # Verify Java version and permissions
   - echo "Using JAVA_HOME: $JAVA_HOME"
+  - ls -ld $JAVA_HOME
   - java -version
 
   # Install Sonar Scanner
