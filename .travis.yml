@@ -1,36 +1,32 @@
-dist: focal
-language: docker
+language: node_js
+node_js:
+  - "16"
+  
+language: java
 
-services:
-  - docker
+jdk:
+  - semeru17
+
 
 before_install:
-  # Pull the necessary Docker images
-  - docker pull node:16-bullseye-slim
-  - docker pull openjdk:17
+ 
 
-  # Install unzip and then install SonarScanner in the debian-based container
-  - docker run --rm -v $PWD:/workspace -w /workspace debian:bullseye-slim bash -c "
-      apt-get update && \
-      apt-get install -y bash curl unzip && \
-      curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip && \
-      unzip sonar-scanner-cli.zip && \
-      export PATH=\$PATH:/workspace/sonar-scanner-4.7.0.2747-linux/bin && \
-      echo \"SonarScanner installed\" && \
-      rm sonar-scanner-cli.zip"
+  # Install Sonar Scanner
+  - curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
+  - unzip sonar-scanner.zip
+  - export PATH=$PATH:$PWD/sonar-scanner-4.7.0.2747-linux/bin
+
+install:
+  - npm install
 
 script:
-  # Run your build commands inside the Node.js Docker container
-  - docker run --rm -v $PWD:/workspace -w /workspace node:16-bullseye-slim bash -c "npm install && npm test"
-  
-  # Run the SonarScanner inside the container with full debug (-X)
-  - docker run --rm -v $PWD:/workspace -w /workspace node:16-bullseye-slim bash -c "
-      export PATH=\$PATH:/workspace/sonar-scanner-4.7.0.2747-linux/bin && \
-      sonar-scanner -Dsonar.projectKey=travis-sonarqube \
+  - npm test
+
+after_success:
+  - |
+    sonar-scanner \
+      -Dsonar.projectKey=travis-sonarqube \
       -Dsonar.sources=. \
       -Dsonar.host.url=https://sonar.eha.ng/ \
-      -Dsonar.login=\$TRAVIS_SONARQUBE \
-      -X"
-
-  # Run your Java version check in the OpenJDK container
-  - docker run --rm -v $PWD:/workspace -w /workspace openjdk:17 bash -c "java -version"
+      -Dsonar.login=$TRAVIS_SONARQUBE \
+      -X
