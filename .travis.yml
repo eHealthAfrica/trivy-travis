@@ -1,13 +1,10 @@
-language: node_js
-node_js:
-  - 22
+language: minimal  # Use minimal to avoid Travis's default Node.js setup
 
 jdk:
   - semeru17  
 
-
 before_install:
-
+  # Update glibc
   - sudo apt-get update
   - sudo apt-get install -y software-properties-common
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
@@ -22,8 +19,12 @@ before_install:
   - make -j$(nproc)
   - sudo make install
   - export LD_LIBRARY_PATH=/opt/glibc-2.28/lib:$LD_LIBRARY_PATH
+
+  # Install Node.js manually
+  - curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+  - sudo apt-get install -y nodejs
   - node -v  # Verify Node.js version
-  - echo "Node.js version is $(node -v)"   # Print Node.js version to the log for verification
+  - npm -v   # Verify npm version
   
   # Install Sonar Scanner
   - curl -L -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.2.0.4584-linux-x64.zip
@@ -31,7 +32,7 @@ before_install:
   - export PATH=$PATH:$PWD/sonar-scanner-6.2.0.4584-linux-x64/bin
 
 env:
-  - SONAR_NODEJS_EXECUTABLE=$(which node)  # Set the Node.js executable path for SonarQube
+  - SONAR_NODEJS_EXECUTABLE=$(which node)
 
 install:
   - npm install  # Install dependencies
@@ -46,5 +47,5 @@ after_success:
       -Dsonar.sources=. \
       -Dsonar.host.url=https://sonar.eha.ng/ \
       -Dsonar.login=$TRAVIS_SONARQUBE \
-      -Dsonar.nodejs.executable=$SONAR_NODEJS_EXECUTABLE  # Use the SONAR_NODEJS_EXECUTABLE environment variable
+      -Dsonar.nodejs.executable=$SONAR_NODEJS_EXECUTABLE \
       -X  # Run with debug output
