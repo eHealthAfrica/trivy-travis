@@ -3,10 +3,14 @@ language: java
 jdk:
   - semeru17  # Use JDK 17 (Semeru version)
 
-node_js:
-  - node 
 
 before_install:
+  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+  - export NVM_DIR="$HOME/.nvm"
+  - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  
+  - nvm install 22
+  - nvm use 22
   - node -v  # Verify Node.js version
   - echo "Node.js version is $(node -v)"   # Print Node.js version to the log for verification
   
